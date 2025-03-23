@@ -1,4 +1,6 @@
-const { Sequelize } = require('sequelize')
+require('dotenv').config();
+
+const { Sequelize } = require('sequelize');
 
 const db = new Sequelize({
   database: process.env.DB_NAME,
@@ -7,6 +9,6 @@ const db = new Sequelize({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   dialect: process.env.DB_DIALECT
-})
+});
 
-module.exports = db
+module.exports = db;

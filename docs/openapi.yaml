@@ -8,16 +8,19 @@ info:
     ### CRUD Operations
     - `/api/v1/wizards` (Current): GET, POST, PUT, DELETE 
       
-    ### Wizard Versions
+    ### Versions
     - `v1`
-      - Simplified request/response structure
+      - Simplified request/response structure for testing purposes
+      - Simplified integration tests on CRUD operations for /wizards
+      - No database connection
       - No authentication/authorization
     - `v2`
+      - Database integration through sequelize and mysql
+    - `v3`
       - Add users model and JWT tokens
       - POST `/wizards` requires authentication through `/login` by JWT validation
-    - `v3`
-      - Improved request/responses with JSend
       - PUT/DELETE require specific user roles
+      - Improved request/responses with JSend
 
 servers: 
   - url: http://localhost:3000
