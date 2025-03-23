@@ -1,0 +1,129 @@
+openapi: 3.1.1
+info:
+  title: Harry Potter API
+  version: 1.0.0
+  description: |
+    Documentation for Harry Potter API
+    
+    ### CRUD Operations
+    - `/api/v1/wizards` (Current): GET, POST, PUT, DELETE 
+      
+    ### Wizard Versions
+    - `v1`
+      - Simplified request/response structure
+      - No authentication/authorization
+    - `v2`
+      - Add users model and JWT tokens
+      - POST `/wizards` requires authentication through `/login` by JWT validation
+    - `v3`
+      - Improved request/responses with JSend
+      - PUT/DELETE require specific user roles
+
+servers: 
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /api/v1/wizards:
+    get:
+      tags: 
+        - Wizards v1
+      summary: Get a all wizards
+      responses:
+        "200":
+          description: A list of wizards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WizardV1'
+              example: 
+                - id: 1
+                  name: Harry Potter
+                - id: 2
+                  name: Hermione Granger
+                - id: 3
+                  name: Ron Weasley
+                - id: 4
+                  name: Albus Dumbledore
+                - id: 5
+                  name: Severus Snape
+    post:
+      tags: 
+        - Wizards v1
+      summary: Create a wizard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWizardV1'
+            example:
+              name: Luna Lovegood
+      responses:
+        "201":
+          description: Wizard successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WizardV1'
+              example:
+                id: 6
+                name: Luna Lovegood
+      
+  /api/v1/wizards/{id}:
+    put:
+      tags: 
+        - Wizards v1
+      parameters: 
+      - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWizardV1'
+      responses:
+        "204":
+          description: Updates a wizard
+    delete:
+      tags: 
+        - Wizards v1
+      parameters: 
+      - $ref: '#/components/parameters/id'
+      responses:
+        "204":
+          description: Deletes a wizard
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: A unique identifier for a wizard
+      schema:
+        type: integer
+        example: 1
+  schemas:
+    WizardV1:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Harry Potter
+    CreateWizardV1:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Harry Potter
+    UpdateWizardV1:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Hermione Grander
