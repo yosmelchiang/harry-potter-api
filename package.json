@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "start": "node --watch --env-file=.env ."
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
