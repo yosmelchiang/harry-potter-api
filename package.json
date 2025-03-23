@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node --watch --env-file=.env .",
+    "start": "node --watch .",
     "test": "jest"
   },
   "dependencies": {

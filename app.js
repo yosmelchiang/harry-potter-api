@@ -15,10 +15,14 @@ const apiRouter = require(`./routes/${apiVersion}`); //API router '/api/v1' serv
 const wizardRouter = require(`./routes/${apiVersion}/wizards`);
 
 app.use(express.json()); //Middleware to parse request bodies to JSON format
-app.use(apiPrefix + '/docs', swaggerUI.serve, swaggerUI.setup(openapi)); //Serve API documentation
+app.use('/api' + '/docs', swaggerUI.serve, swaggerUI.setup(openapi)); //Serve API documentation
 
 app.use('/', indexRouter);
 app.use(apiPrefix + '/', apiRouter);
 app.use(apiPrefix + '/wizards', wizardRouter);
+
+app.use((req, res) => {
+  res.status(404).send('Resource not available')
+})
 
 module.exports = app;

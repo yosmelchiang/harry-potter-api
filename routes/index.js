@@ -5,6 +5,11 @@ router.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to the API!',
     links: {
+      documentation: {
+        href: '/api/docs',
+        method: 'GET',
+        description: 'Swagger API documentation'
+      },
       api_v1: {
         href: '/api/v1',
         method: 'GET',
