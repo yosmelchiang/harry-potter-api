@@ -16,24 +16,20 @@ router.route('/')
   res.status(200).json( { data: wizards } )
 })
 .post((req, res) => {
-  // console.log(req.body)
   res.status(201).json( {message: 'Resource successfully created', data: req.body})
 })
 
 //PUT & DELETE
 router.route('/:id')
 .put((req, res) => {
-  console.log(req.params.id)
-  console.log(req.body)
   res.status(200).json( {message: 'Resource updated', data: 
     {
-      id: req.params.id,
+      id: +req.params.id, //converted to a number
       name: req.body.name
     }
     })
 })
 .delete((req, res) => {
-  console.log('Resource deleted')
   res.status(204).send()
 })
 module.exports = router
