@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
       wizards: {
         href: '/api/v1/wizards',
         method: 'GET, POST, PUT, DELETE',
-        description: 'CRUD operations on wizard resource'
+        description: 'Supports CRUD operations through simple request/response functionality'
       }
     }
   });
