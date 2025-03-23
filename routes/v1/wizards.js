@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-//GET
+//GET & POST
 router.route('/')
 .get( (req, res) => {
   const wizards = [ 
@@ -20,6 +20,7 @@ router.route('/')
   res.status(201).json( {message: 'Resource successfully created', data: req.body})
 })
 
+//PUT & DELETE
 router.route('/:id')
 .put((req, res) => {
   console.log(req.params.id)
