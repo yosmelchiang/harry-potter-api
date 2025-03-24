@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+// We need to update the tests
+
 const app = require(process.cwd() + '/app.js');
 const request = require('supertest');
 
