@@ -1,15 +1,15 @@
 const router = require('express').Router();
 const wizardService = require(process.cwd() + '/services/wizardService');
-const { validateToken } = require('../middlewares/jwtMiddleware.js')
+const { validateToken, validateRole } = require('../middlewares/jwtMiddleware.js')
 
 //GET & POST
 router
   .route('/')
-  .get(async (req, res) => {
+  .get(async (req, res) => { // Open for all
     const wizards = await wizardService.getAll();
     res.status(200).json({ data: wizards });
   })
-  .post(validateToken, async (req, res) => {
+  .post(validateToken, async (req, res) => { // Requires JWT Token
     const { name, houseId } = req.body;
 
     try {
@@ -33,7 +33,7 @@ router
 //PUT & DELETE
 router
   .route('/:id')
-  .put(async (req, res) => {
+  .put(validateRole, async (req, res) => { // Requires role based access
     const id = req.params.id;
     const { name, houseId } = req.body;
 
@@ -44,7 +44,7 @@ router
       return res.status(404).json({ error: err.message });
     }
   })
-  .delete( async (req, res) => {
+  .delete(validateRole, async (req, res) => {
     const id = req.params.id
 
     try {
@@ -54,4 +54,5 @@ router
       return res.status(400).json({error: err.message})
     }
   });
+  
 module.exports = router;
