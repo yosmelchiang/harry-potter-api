@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const wizardService = require(process.cwd() + '/services.js/wizardService');
+const wizardService = require(process.cwd() + '/services/wizardService');
+const { validateToken } = require('../middlewares/jwtMiddleware.js')
 
 //GET & POST
 router
@@ -8,7 +9,7 @@ router
     const wizards = await wizardService.getAll();
     res.status(200).json({ data: wizards });
   })
-  .post(async (req, res) => {
+  .post(validateToken, async (req, res) => {
     const { name, houseId } = req.body;
 
     try {

@@ -1,27 +1,24 @@
 openapi: 3.1.1
 info:
   title: Harry Potter API
-  version: 2.0.0
+  version: 1.0.0
   description: |
     Documentation for Harry Potter API
     
-    ### CRUD Operations
-    - `/api/{version}/wizards`
+    ## CRUD Operations
+    ### Path
+    - `/api/wizards`
       
-    ### Versions
-    - `v1` (Legacy)
-    - `v2` (Current with database support)
-    - `v3` (Future: JWT authentication & roles)
+    ### Authorisation
+    | Authenticated | Role | GET | POST | PUT | DELETE |
+    | --- | --- | --- | --- | --- | --- |
+    | No | None | Y | N | N | N |
+    | Yes | None | Y | Y | N | N |
+    | Yes | Admin | Y | Y | Y | Y |
 
 servers: 
-  - url: http://localhost:3000/api/{version}
+  - url: http://localhost:3000/api/v1
     description: Local development server
-    variables:
-      version:
-        default: v2
-        enum:
-          - v1
-          - v2
 
 paths:
   /wizards:

@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const app = require(process.cwd() + '/app.js');
 const request = require('supertest');
-const currentVersion = process.env.API_VERSION || 'v1';
 
 describe('CRUD Operations on /wizards', () => {
   //GET
@@ -10,7 +9,7 @@ describe('CRUD Operations on /wizards', () => {
     // AAA
 
     //arrange
-    const path = `/api/${currentVersion}/wizards`;
+    const path = `/api/v1/wizards`;
     const expectedStatusCode = 200;
     //act
     const { body, statusCode } = await request(app).get(path);
@@ -29,7 +28,7 @@ describe('CRUD Operations on /wizards', () => {
 
   //POST
   test('POST: Create a new wizard', async () => {
-    const path = `/api/${currentVersion}/wizards`;
+    const path = `/api/v1/wizards`;
     const expectedStatusCode = 201;
     const newData = { name: 'Hermione Grander' };
 
@@ -46,7 +45,7 @@ describe('CRUD Operations on /wizards', () => {
   //PUT
   test('PUT: Update a wizard', async () => {
     const id = 1;
-    const path = `/api/${currentVersion}/wizards/${id}`;
+    const path = `/api/v1/wizards/${id}`;
     const expectedStatusCode = 200;
     const newData = { name: 'Luna Lovegood' };
 
@@ -58,7 +57,7 @@ describe('CRUD Operations on /wizards', () => {
   //DELETE
   test('DELETE: Deletes a wizard', async () => {
     const id = 1;
-    const path = `/api/${currentVersion}/wizards/${id}`;
+    const path = `/api/v1/wizards/${id}`;
     const expectedStatusCode = 204;
 
     const { body, statusCode } = await request(app).delete(path);

@@ -10,15 +10,10 @@ router.get('/', (req, res) => {
         method: 'GET',
         description: 'Swagger API documentation'
       },
-      api_v1: {
-        href: '/api/v1',
-        method: 'GET',
-        description: 'Access the version 1 of the API which includes core routing functionality without database integration'
-      },
-      api_v2: {
-        href: '/api/v2',
-        method: 'GET',
-        description: 'Access the version 2 of the API which includes database integration through sequelize'
+      wizards: {
+        href: '/api/v1/wizards',
+        method: 'GET, POST, PUT, DELETE',
+        description: 'Supports CRUD operations against MYSQL through Sequelize'
       }
     }
   });

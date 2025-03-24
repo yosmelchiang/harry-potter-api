@@ -3,7 +3,7 @@ require('dotenv').config();
 const app = require('./app.js');
 const PORT = process.env.PORT || 3000;
 const db = require('./models'),
-  { House, Wizard } = db.models;
+  { House, Wizard, User } = db.models;
 
 db.sync({ force: true })
   .then(() => {
@@ -25,6 +25,20 @@ db.sync({ force: true })
       { name: 'Pansy Parkinson', HouseId: 4 }, // Slytherin
       { name: 'Nymphadora Tonks', HouseId: 2 } // Hufflepuff
     ]);
+    User.bulkCreate([
+      { 
+        name: 'user',
+        email: 'user@email.com',
+        password: 'user1234',
+        role: 'user',
+      },
+      { 
+        name: 'admin',
+        email: 'admin@email.com',
+        password: 'admin1234',
+        role: 'admin',
+      }
+    ])
   })
   .then(() => {
     app.listen(PORT, () => {
