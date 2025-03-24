@@ -1,0 +1,5 @@
+[
+  { "WizardId": 1, "SpellId": 2 },
+  { "WizardId": 1, "SpellId": 4 },
+  { "WizardId": 2, "SpellId": 4 }
+]

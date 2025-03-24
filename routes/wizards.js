@@ -10,10 +10,10 @@ router
     res.status(200).jsend.success( wizards )
   })
   .post(validateToken, async (req, res) => { // Requires JWT Token
-    const { name, HouseId } = req.body;
+    const { name, gender, ancestry, patronus, isDarkWizard, HouseId } = req.body;
 
     try {
-      const createdWizard = await wizardService.create(name, HouseId);
+      const createdWizard = await wizardService.create(name, gender, ancestry, patronus, isDarkWizard, HouseId );
       return res
         .status(201)
         .jsend.success( createdWizard )

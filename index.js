@@ -3,42 +3,15 @@ require('dotenv').config();
 const app = require('./app.js');
 const PORT = process.env.PORT || 3000;
 const db = require('./models'),
-  { House, Wizard, User } = db.models;
+  { House, Wizard, User, Spell, wizard_spell } = db.models;
 
 db.sync({ force: true })
   .then(() => {
-    House.bulkCreate([
-      { name: 'Gryffindor' },
-      { name: 'Hufflepuff' },
-      { name: 'Ravenclar' },
-      { name: 'Slytherin' }
-    ]);
-    Wizard.bulkCreate([
-      { name: 'Harry Potter', HouseId: 1 }, // Gryffindor
-      { name: 'Hermione Granger', HouseId: 1 }, // Gryffindor
-      { name: 'Ron Weasley', HouseId: 1 }, // Gryffindor
-      { name: 'Luna Lovegood', HouseId: 3 }, // Ravenclaw
-      { name: 'Draco Malfoy', HouseId: 4 }, // Slytherin
-      { name: 'Cedric Diggory', HouseId: 2 }, // Hufflepuff
-      { name: 'Neville Longbottom', HouseId: 1 }, // Gryffindor
-      { name: 'Cho Chang', HouseId: 3 }, // Ravenclaw
-      { name: 'Pansy Parkinson', HouseId: 4 }, // Slytherin
-      { name: 'Nymphadora Tonks', HouseId: 2 } // Hufflepuff
-    ]);
-    User.bulkCreate([
-      { 
-        name: 'user',
-        email: 'user@email.com',
-        password: 'user1234',
-        role: 'user',
-      },
-      { 
-        name: 'admin',
-        email: 'admin@email.com',
-        password: 'admin1234',
-        role: 'admin',
-      }
-    ])
+    House.bulkCreate(require('./data/houses.json'));
+    Wizard.bulkCreate(require('./data/wizards.json'));
+    Spell.bulkCreate(require('./data/spells.json'))
+    wizard_spell.bulkCreate(require('./data/wizard_spell.json'))
+    User.bulkCreate(require('./data/users.json'))
   })
   .then(() => {
     app.listen(PORT, () => {

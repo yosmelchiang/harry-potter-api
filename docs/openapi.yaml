@@ -22,6 +22,31 @@ servers:
     description: Local development server
 
 paths:
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: Authenticate yourself
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: johnjohnson
+                password:
+                  type: string
+                  example: doedoson
+      responses:
+        "200":
+          description: Login successfully
+        "400":
+          description: Missing required parameters
+        "401":
+          description: Invalid credentials
+
   /wizards:
     get:
       tags: 
@@ -53,6 +78,8 @@ paths:
                   name: Draco Malfoy
                   HouseId: 4
     post:
+      security:
+        - BearerAuth: []
       tags: 
         - Wizards
       summary: Create a wizard
@@ -64,6 +91,11 @@ paths:
               $ref: '#/components/schemas/CreateWizard'
             example:
               name: Luna Lovegood
+              gender: Female
+              ancestry: Pure-blood
+              patronus: Hare
+              isDarkWizard: false
+              HouseId: 1              
       responses:
         "201":
           description: Wizard successfully created
@@ -75,6 +107,10 @@ paths:
                 id: 6
                 name: Luna Lovegood
                 HouseId: 3
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
       
   /wizards/{id}:
     put:
@@ -93,6 +129,10 @@ paths:
       responses:
         "204":
           description: Updates a wizard
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
     delete:
       security:
         - BearerAuth: []
@@ -103,8 +143,17 @@ paths:
       responses:
         "204":
           description: Deletes a wizard
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
 
 components:
+  responses:
+    Unauthorized:
+      description: Invalid authorization token
+    Forbidden:
+      description: Not permitted   
   securitySchemes:
     BearerAuth:
       type: http
@@ -129,6 +178,18 @@ components:
         name:
           type: string
           example: Harry Potter
+        gender:
+          type: string
+          example: Male
+        ancestry:
+          type: string
+          example: Muggle-born
+        patronus:
+          type: string
+          example: Stag
+        isDarkWizard:
+          type: boolean
+          example: false
         HouseId:
           type: integer
           example: 1
@@ -138,6 +199,18 @@ components:
         name:
           type: string
           example: Harry Potter
+        gender:
+          type: string
+          example: Male
+        ancestry:
+          type: string
+          example: Muggle-born
+        patronus:
+          type: string
+          example: Stag
+        isDarkWizard:
+          type: boolean
+          example: false
         HouseId:
           type: integer
           example: 1
@@ -146,7 +219,19 @@ components:
       properties:
         name:
           type: string
-          example: Hermione Grander
+          example: Harry Potter
+        gender:
+          type: string
+          example: Male
+        ancestry:
+          type: string
+          example: Muggle-born
+        patronus:
+          type: string
+          example: Stag
+        isDarkWizard:
+          type: boolean
+          example: false
         HouseId:
           type: integer
           example: 1

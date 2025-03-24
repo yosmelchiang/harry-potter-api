@@ -1,0 +1,9 @@
+[
+  { "name": "Aberto", "description": "Opens locked doors" },
+  { "name": "Accio", "description": "Summons objects" },
+  { "name": "Aguamenti", "description": "Summons water" },
+  { "name": "Alohomora", "description": "Unlocks objects" },
+  { "name": "Anapneo", "description": "Clears someone's airway" },
+  { "name": "Aparecium", "description": "Reveals secret written messages" },
+  { "name": "Ascendio", "description": "Propells someone into the air" }
+]

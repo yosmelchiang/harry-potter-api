@@ -35,7 +35,7 @@ const validateRole = (req, res, next) => {
     if(decodedToken.role === process.env.ADMIN_ROLE)
       next();
     else
-      return res.status(401).json({message: 'Unauthorized'})
+      return res.status(403).json({message: 'Not permitted'})
   } catch (err) {
     return res.status(401).json({ message: 'Invalid authorization token' });
   }

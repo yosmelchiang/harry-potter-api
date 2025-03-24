@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Harry Potter",
+    "gender": "Male",
+    "ancestry": "Half-blood",
+    "patronus": "Stag",
+    "isDarkWizard": false,
+    "HouseId": 1
+  },
+  {
+    "name": "Hermione Granger",
+    "gender": "Female",
+    "ancestry": "Muggle-born",
+    "patronus": "Otter",
+    "isDarkWizard": false,
+    "HouseId": 1
+  },
+  {
+    "name": "Draco Malfoy",
+    "gender": "Male",
+    "ancestry": "Pure-blood",
+    "patronus": "None",
+    "isDarkWizard": false,
+    "HouseId": 4
+  },
+  {
+    "name": "Tom Riddle",
+    "gender": "Male",
+    "ancestry": "Half-blood",
+    "patronus": "None",
+    "isDarkWizard": true,
+    "HouseId": 4
+  },
+  {
+    "name": "Bellatrix Lestrange",
+    "gender": "Female",
+    "ancestry": "Pure-blood",
+    "patronus": "None",
+    "isDarkWizard": true,
+    "HouseId": 4
+  },
+  {
+    "name": "Luna Lovegood",
+    "gender": "Female",
+    "ancestry": "Pure-blood",
+    "patronus": "Hare",
+    "isDarkWizard": false,
+    "HouseId": 3
+  },
+  {
+    "name": "Severus Snape",
+    "gender": "Male",
+    "ancestry": "Half-blood",
+    "patronus": "Doe",
+    "isDarkWizard": false,
+    "HouseId": 4
+  },
+  {
+    "name": "Sirius Black",
+    "gender": "Male",
+    "ancestry": "Pure-blood",
+    "patronus": "Dog",
+    "isDarkWizard": false,
+    "HouseId": 1
+  },
+  {
+    "name": "Gellert Grindelwald",
+    "gender": "Male",
+    "ancestry": "Pure-blood",
+    "patronus": "None",
+    "isDarkWizard": true,
+    "HouseId": 3
+  },
+  {
+    "name": "Nymphadora Tonks",
+    "gender": "Female",
+    "ancestry": "Half-blood",
+    "patronus": "Wolf",
+    "isDarkWizard": false,
+    "HouseId": 2
+  }
+]
