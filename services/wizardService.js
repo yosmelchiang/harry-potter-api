@@ -14,9 +14,9 @@ class Wizard {
   }
 
   //POST
-  async create(name, houseId) {
+  async create(name, HouseId) {
     try {
-      return await this.wizard.create({ name, HouseId: houseId });
+      return await this.wizard.create({ name, HouseId });
     } catch (err) {
       throw err;
     }

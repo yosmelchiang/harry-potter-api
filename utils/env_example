@@ -1,0 +1,12 @@
+PORT=3000
+JWT_SECRET=
+ADMIN_ROLE= # Specific role used in role based access
+
+DB_NAME=hpdb
+DB_USERNAME=
+DB_PASSWORD=
+
+DB_HOST=127.0.0.1
+DB_PORT=3306
+
+DB_DIALECT=mysql

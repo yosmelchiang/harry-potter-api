@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 // Root route (non-versioned)
 router.get('/', (req, res) => {
-  res.status(200).json({
+  res.status(200).jsend.success({
     message: 'Welcome to the API!',
     links: {
       documentation: {

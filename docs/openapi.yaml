@@ -1,4 +1,5 @@
 openapi: 3.1.1
+
 info:
   title: Harry Potter API
   version: 1.0.0
@@ -7,7 +8,7 @@ info:
     
     ## CRUD Operations
     ### Path
-    - `/api/wizards`
+    - `/api/v1/wizards`
       
     ### Authorisation
     | Authenticated | Role | GET | POST | PUT | DELETE |
@@ -38,14 +39,19 @@ paths:
               example: 
                 - id: 1
                   name: Harry Potter
+                  HouseId: 1
                 - id: 2
                   name: Hermione Granger
+                  HouseId: 1
                 - id: 3
                   name: Ron Weasley
+                  HouseId: 1
                 - id: 4
-                  name: Albus Dumbledore
+                  name: Luna Lovegood
+                  HouseId: 3
                 - id: 5
-                  name: Severus Snape
+                  name: Draco Malfoy
+                  HouseId: 4
     post:
       tags: 
         - Wizards
@@ -68,9 +74,12 @@ paths:
               example:
                 id: 6
                 name: Luna Lovegood
+                HouseId: 3
       
   /wizards/{id}:
     put:
+      security:
+        - BearerAuth: []    
       tags: 
         - Wizards
       parameters: 
@@ -85,6 +94,8 @@ paths:
         "204":
           description: Updates a wizard
     delete:
+      security:
+        - BearerAuth: []
       tags: 
         - Wizards
       parameters: 
@@ -92,7 +103,13 @@ paths:
       responses:
         "204":
           description: Deletes a wizard
+
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
   parameters:
     id:
       name: id
@@ -112,15 +129,24 @@ components:
         name:
           type: string
           example: Harry Potter
+        HouseId:
+          type: integer
+          example: 1
     CreateWizard:
       type: object
       properties:
         name:
           type: string
           example: Harry Potter
+        HouseId:
+          type: integer
+          example: 1
     UpdateWizard:
       type: object
       properties:
         name:
           type: string
           example: Hermione Grander
+        HouseId:
+          type: integer
+          example: 1

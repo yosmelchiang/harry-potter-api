@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const wizardService = require(process.cwd() + '/services/wizardService');
+const wizardService = require('../services/wizardService.js')
 const { validateToken, validateRole } = require('../middlewares/jwtMiddleware.js')
 
 //GET & POST
@@ -7,19 +7,18 @@ router
   .route('/')
   .get(async (req, res) => { // Open for all
     const wizards = await wizardService.getAll();
-    res.status(200).json({ data: wizards });
+    res.status(200).jsend.success( wizards )
   })
   .post(validateToken, async (req, res) => { // Requires JWT Token
-    const { name, houseId } = req.body;
+    const { name, HouseId } = req.body;
 
     try {
-      const createdWizard = await wizardService.create(name, houseId);
+      const createdWizard = await wizardService.create(name, HouseId);
       return res
         .status(201)
-        .json({ message: 'Resource successfully created', data: createdWizard });
+        .jsend.success( createdWizard )
     } catch (err) {
-      return res.status(400).json({
-        message: 'Validation failed',
+      return res.status(400).jsend.fail({
         errors: err.errors.map((e) => {
           return {
             message: e.message,
@@ -39,9 +38,9 @@ router
 
     try {
       const updatedWizard = await wizardService.update(id, name, houseId)
-      return res.status(200).json({ data: updatedWizard})
+      return res.status(200).jsend.success( updatedWizard )
     } catch(err) {
-      return res.status(404).json({ error: err.message });
+      return res.status(404).jsend.error(err.message);
     }
   })
   .delete(validateRole, async (req, res) => {
@@ -51,7 +50,7 @@ router
       await wizardService.remove(id)
       return res.status(204).end()
     } catch(err) {
-      return res.status(400).json({error: err.message})
+      return res.status(400).jsend.error(err.message)
     }
   });
   
