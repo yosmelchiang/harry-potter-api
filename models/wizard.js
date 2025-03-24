@@ -1,19 +1,19 @@
 module.exports = (db, DataTypes) => {
   const Wizard = db.define('Wizard', {
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     gender: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(10),
       allowNull: false
     },
     ancestry: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     patronus: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     isDarkWizard: {
