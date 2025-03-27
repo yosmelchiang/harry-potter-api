@@ -11,7 +11,7 @@ info:
     - `/api/v1/wizards`
       
     ### Authorisation
-    | Authenticated | Role | GET | POST | PUT | DELETE |
+    | Authenticated | Authorized | GET | POST | PUT | DELETE |
     | --- | --- | --- | --- | --- | --- |
     | No | None | Y | N | N | N |
     | Yes | None | Y | Y | N | N |
