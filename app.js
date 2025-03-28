@@ -16,6 +16,7 @@ const authRouter = require('./routes/auth.js')
 app.set('apiPrefix', apiPrefix) //We are using this prefix in tests so we save it to avoid creating a new var
 app.use(express.json()); // Middleware to parse request bodies to JSON format
 app.use(apiPrefix + '/docs', swaggerUI.serve, swaggerUI.setup(openapi)); //Serve API documentation
+app.use(apiPrefix + '/tests', express.static('./coverage/lcov-report')) // Serve API test coverage
 app.use(jsend.middleware) // Prettify JSON responses
 
 app.use('/', indexRouter);

@@ -10,6 +10,11 @@ router.get('/', (req, res) => {
         method: 'GET',
         description: 'Swagger API documentation'
       },
+      tests_coverage: {
+        href: '/api/v1/tests',
+        method: 'GET',
+        description: 'API tests coverage'
+      },
       wizards: {
         href: '/api/v1/wizards',
         method: 'GET, POST, PUT, DELETE',
