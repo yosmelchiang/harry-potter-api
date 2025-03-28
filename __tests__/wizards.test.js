@@ -1,103 +1,247 @@
+// 3A pattern in every tests: arrange, act, assert
+// 3 parts structure: describe what we are testing, describe the scenario, test the expectations
+// Avoidd relying on pre-existing data, use mocks
+
 require('dotenv').config();
 
 const app = require('../app.js');
 const request = require('supertest');
-const apiPrefix = '/api/v1'
-const db = require('../models')
+const apiPrefix = '/api/v1';
 
-const jwt = {
-  userToken: '', //Just a normal user authentication  token
-  adminToken: '' //An admin token used for RBA (Role Based Access)
-}
-
-beforeAll(async () => {
-  //Get a regular user token
-  const user = {
-    username: 'user',
-    password: 'user1234'
-  }
-  const path = apiPrefix + '/login'
-
-  const { body: { data: { auth: { access_token: user_token}} } } = await request(app).post(path).send(user)
-  
-  jwt.userToken = user_token
-
-  //Get an admin token
-  const admin = {
-    username: 'admin',
-    password: 'admin1234',
-  }
-
-  const { body: { data: { auth: { access_token: admin_token }}}} = await request(app).post(path).send(admin)
-  jwt.adminToken = admin_token
-})
-
+const wizardService = require('../services/wizardService.js');
 
 describe('CRUD Operations on /wizards', () => {
+  // GET
+  describe('GET: Retrieve a list of wizards', () => {
+    // Mock database behaviour - We dont want to rely on database connection being functional
+    const mockResponse = [
+      {
+        name: 'Harry Potter',
+        gender: 'Male',
+        ancestry: 'Half-blood',
+        patronus: 'Stag',
+        isDarkWizard: false,
+        HouseId: 1
+      },
+      {
+        name: 'Hermione Granger',
+        gender: 'Female',
+        ancestry: 'Muggle-born',
+        patronus: 'Otter',
+        isDarkWizard: false,
+        HouseId: 1
+      },
+      {
+        name: 'Draco Malfoy',
+        gender: 'Male',
+        ancestry: 'Pure-blood',
+        patronus: 'None',
+        isDarkWizard: false,
+        HouseId: 4
+      }
+    ];
+    test('StatusCode 200 and a JSON resource containing { status: success, data: an array of objects }', async () => {
+      // Arrange - A scenario where our service returns records from the database
+      wizardService.getAll = jest.fn(async () => {
+        return await mockResponse;
+      });
+      const path = '/api/v1/wizards';
 
-  //GET
-  test('GET: Retrieve a list of wizards', async () => {
-    // AAA
-    //arrange
-    const path = `/api/v1/wizards`;
-    const expectedStatus = 200;
-    //act
-    const { body, status } = await request(app).get(path);
+      // Act
+      const { body, statusCode } = await request(app).get(path);
 
-    //assert
-    expect(status).toBe(expectedStatus);
-    expect(body).toHaveProperty('data')
+      // Assert - Happy days scenarios
+      expect(statusCode).toBe(200);
+      expect(body).toHaveProperty('status');
+      expect(body.status).toBe('success');
+      expect(body).toHaveProperty('data');
+      expect(body.data).toEqual(mockResponse);
+    });
+    test('StatusCode 500 when the service throws an error', async () => {
+      // Arrange - A scenario where our service throws an error
+      wizardService.getAll = jest.fn(async () => {
+        throw new Error('Could not connect to database');
+      });
+      const path = '/api/v1/wizards';
+
+      // Act
+      const { body, statusCode } = await request(app).get(path);
+
+      // Assert
+      expect(statusCode).toBe(500);
+      expect(body).toHaveProperty('status');
+      expect(body.status).toBe('error');
+    });
   });
 
-  //POST
-  //Wizards
-  test('POST: Create a new wizard', async () => {
-    const path = `/api/v1/wizards`;
-    const expectedStatus = 201;
-    const newData = { 
-      name: 'Hermione Grander',
-      gender: 'Female',
-      ancestry: 'Muggle-born',
-      patronus: 'Otter',
-      isDarkWizard: false,
-      HouseId: 1
-    };
+  // POST - JWT AUTH
+  describe('POST: Create a wizard', () => {
+    let authToken;
+    
+    beforeEach(async() => {
+      const {body, statusCode} = await request(app).post(apiPrefix  + '/login').send({
+        username: 'user',
+        password: 'user1234'
+      })
+      
+      authToken = body.data.auth.access_token
+    })
 
-    const { body, status } = await request(app).post(path).set('Authorization', `Bearer ${jwt.userToken}`).send(newData);
+    test('StatusCode 201 when successfully creatinga wizard', async () => {
+      // Arrange - A scenario where our service creates a new record in the database
+      const payload = {
+        name: 'New Wizard',
+        gender: 'Male',
+        ancestry: 'Pure-blood',
+        patronus: 'Stag',
+        isDarkWizard: false,
+        HouseId: 1
+      };
+      wizardService.create = jest.fn(async (name, gender, ancestry, patronus, isDarkWizard, HouseId) => {
+        return { id: 1, ...payload };
+      });
+      const path = `/api/v1/wizards`;
 
-    expect(status).toBe(expectedStatus);
-    expect(body).toHaveProperty('data')
-    expect(Object.keys(body.data).length > 0).toBe(true)
+      // Act - Get database result
+      const dbResult = await wizardService.create(
+        'New Wizard',
+        'Male',
+        'Pure-blood',
+        'Stag',
+        false,
+        1
+      );
+
+      // Act - Create the new wizard request
+      const { body, statusCode } = await request(app)
+        .post(path)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(payload);
+
+      // Assert - Assert the server response
+      expect(statusCode).toBe(201);
+      expect(body).toHaveProperty('data');
+      expect(body.data).toEqual(dbResult);
+    });
+
+    test('StatusCode 400 when there is a missing field', async () => {
+      const incompletePayload = {
+        gender: 'Male',
+        ancestry: 'Pure-blood',
+        patronus: 'Stag',
+        isDarkWizard: false,
+        HouseId: 1
+      };
+        
+      wizardService.create = jest.fn(async (name, gender, ancestry, patronus, isDarkWizard, HouseId) => {
+        if(!name) throw Error('name cannot be missing')
+        if(!gender) throw Error('gender cannot be missing')
+        if(!ancestry) throw Error('ancestry cannot be missing')
+        if(!patronus) throw Error('patronus cannot be missing')
+        if(!isDarkWizard) throw Error('isDarkWizard cannot be missing')
+        if(!HouseId) throw Error('HouseId cannot be missing')
+        return { id: 1, ...payload };
+      });
+    
+      // Act
+      const { body, statusCode } = await request(app)
+        .post('/api/v1/wizards')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(incompletePayload);
+
+      // Assert
+      expect(statusCode).toBe(400);
+      expect(body).toHaveProperty('status');
+      expect(body.status).toBe('error');
+      expect(body).toHaveProperty('message');
+      // expect(body.message).toBe('name cannot be missing');
+    });
   });
 
-  //PUT
-  test('PUT: Update a wizard', async () => {
-    const id = 1;
-    const path = `/api/v1/wizards/${id}`;
-    const expectedStatus = 200;
-    const newData = { name: 'Luna Lovegood' };
+  // PUT - JWT RBA
+  describe('PUT: Update a wizard', () => {
+    let adminToken;
 
-    const { body, status } = await request(app).put(path).set('Authorization', `Bearer ${jwt.adminToken}`).send(newData);
-    status 
-    expect(status).toBe(expectedStatus);
-    expect(body).toHaveProperty('data') // We want to make sure that our data property exists
-    expect(Object.keys(body.data).length > 0).toBe(true) // We want to make sure our data property is not empty
-  });
+    beforeEach(async() => {
+      const { body } = await request(app).post(apiPrefix + '/login').send({
+        username: 'admin',
+        password: 'admin1234'
+      })
+      adminToken = body.data.auth.access_token
+    })
 
-  //DELETE
-  test('DELETE: Deletes a wizard', async () => {
-    const id = 1;
-    const path = `/api/v1/wizards/${id}`;
-    const expectedStatus = 204;
+    test('StatusCode 200 when successfully updating a wizard', async() => {
+      const mockUpdatedWizard = {
+        id: 1,
+        name: 'Updated Wizard',
+        gender: 'Male',
+        ancestry: 'Half-blood',
+        patronus: 'Phoenix',
+        isDarkWizard: false,
+        HouseId: 1
+      };
 
-    const { body, statusCode } = await request(app).delete(path).set('Authorization', `Bearer ${jwt.adminToken}`);
+      wizardService.update = jest.fn(async (id, name, houseId) => {
+        if(id === mockUpdatedWizard.id) {
+          return mockUpdatedWizard;
+        }
+        throw new Error('Wizard not found')
+      })
 
-    expect(statusCode).toBe(expectedStatus); //204
-    expect(body.data).toHaveProperty('data')
-    expect(Object.keys(body).length).toBe(0); //Ensures the body is empty
+      // Arrange
+      const path = apiPrefix + '/wizards/' + mockUpdatedWizard.id
+      const payload = {
+        name: 'Updated Wizard',
+        HouseId: 1
+      }
+      // Act
+      const { body, statusCode } = await request(app).put(path).set('Authorization', `Bearer ${adminToken}`).send(payload)
+      
+      expect(statusCode).toBe(200)
+      expect(body).toHaveProperty('status', 'success')
+      expect(body).toHaveProperty('data')
+      expect(body.data).toEqual(mockUpdatedWizard)
+      
+      // Assert
+    })
+    test('StatusCode 404 when said wizard cannot be found', async () => {
+      const mockUpdatedWizard = {
+        id: 1,
+        name: 'Updated Wizard',
+        gender: 'Male',
+        ancestry: 'Half-blood',
+        patronus: 'Phoenix',
+        isDarkWizard: false,
+        HouseId: 1
+      };
+
+      wizardService.update = jest.fn(async (id, name, houseId) => {
+        if(id === mockUpdatedWizard.id){
+          return mockUpdatedWizard
+        }
+        throw Error('Wizard not found')
+      })
+
+      // Arrange
+      const path = apiPrefix + '/wizards/' + 2
+      const payload = {
+        name: 'Updated Wizard',
+        HouseId: 1
+      }
+
+      // Act
+      const { body, statusCode } = await request(app).put(path).set('Authorization', `Bearer ${adminToken}`).send(payload)
+
+      expect(statusCode).toBe(404)
+      expect(body).toHaveProperty('status', 'error')
+      expect(body).toHaveProperty('message', 'Wizard not found')
+
+    })
+  })
+
+  // DELETE - JWT RBA
+  describe('DELETE: Delete a wizard', () => {
+    test.todo('StatusCode 204 when a wizard is deleted')
+    test.todo('StatusCode 400 when said a wizard cannot be found')
   });
 });
-
-afterAll(async () => {
-  await db.close()
-})

@@ -2,7 +2,10 @@ module.exports = (db, DataTypes) => {
   const Wizard = db.define('Wizard', {
     name: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: 'Name is required'}
+      }
     },
     gender: {
       type: DataTypes.STRING(10),
