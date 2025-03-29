@@ -1,7 +1,7 @@
-const fs = require('fs'),
-      path = require('path')
-const db = require('../config/db.js'), 
-      { DataTypes} = require('sequelize')
+const fs = require('fs')
+const path = require('path')
+const db = require('../config/db.js')
+const { DataTypes} = require('sequelize')
 const models = {};
 
 //Dynamically import models from this directory and attach them to temporary models objection to initiate associations

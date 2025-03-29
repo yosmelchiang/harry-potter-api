@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "start": "node --watch .",
-    "test": "jest --verbose --coverage"
+    "start": "SET NODE_ENV=dev && node --watch .",
+    "test": "SET NODE_ENV=test --verbose && Jest ",
+    "coverage": "SET NODE_ENV=test && Jest --verbose --coverage"
   },
   "dependencies": {
     "@types/jest": "^29.5.14",
